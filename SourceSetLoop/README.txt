@@ -7,7 +7,7 @@ each transformation
 Folder "Loops": contains the loops calling the bodies
 
 File "poisson_data_gen.R": generates Poisson data
-File "main.R": 
+File "main.R": wrapper function, calls and executes the subfiles
 
 
 USAGE:
