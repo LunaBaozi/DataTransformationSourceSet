@@ -9,9 +9,25 @@ start_time <- Sys.time()
 
 primaryset <- c() 
 
+source('~/Scrivania/DataTransformationSourceSet/SourceSetLoop/Bodies/bodyANSC_poisson.R')
+
 for (i in 1:5000){
   
-  source('./Bodies/bodyANSC_poisson.R')
+  set.seed(i)
+  data <- sim_data(W1,W2,n,p)
+  res <- fit_pois_anscombe(data)
+  object <-order_res(data,res)
+  
+  W1 <- as(W1, 'graphNEL')
+  
+  graphs <- list(W1 = W1)
+  
+  
+  result <- sourceSet(graphs, object$all, obj$classes, seed = 1234,
+                      permute = TRUE, shrink = TRUE)
+  print(paste0('Analyzing Anscombe data... iteration #', i))
+  
+  info_all <- infoSource(result, map.name.variable = nodes(graphs$W1))
   
   primaryset <- c(primaryset, list(result$W1$primarySet))
   

@@ -1,6 +1,7 @@
 library(SourceSet)
 library(Rgraphviz)
-library(graphite); library(graph)
+library(graphite)
+library(graph)
 library(Biobase)
 library(statmod)
 library(MASS) 
