@@ -1,17 +1,15 @@
-starting <- function(res,data, W){
+starting <- function(res,data, permute, graph){
   
   object <- lapply(res, function(x) order_res(data, x))
   
-  W1 <- as(W1, 'graphNEL')
+  graph <- list(graph = graph)
+  result <- mclapply(object, function(x) sourceSet(graph, x$all, x$classes, seed = 1234,
+                                                   permute = permute, shrink = TRUE),mc.cores = number_cores)
+
   
-  graphs <- list(W1 = W1)
+  info_all <- lapply(result, function(x) infoSource(x, map.name.variable = nodes(graph$graph)))
   
-  result <- mclapply(object, function(x) sourceSet(graphs, x$all, x$classes, seed = 1234,
-                                                   permute = TRUE, shrink = TRUE),mc.cores = number_cores)
-  
-  info_all <- lapply(result, function(x) infoSource(x, map.name.variable = nodes(graphs$W1)))
-  
-  primaryset <- lapply(result, function(x) list(x$W1$primarySet))
+  primaryset <- lapply(result, function(x) list(x$W$primarySet))
   
   return(list(result = result, info_all = info_all, primary = primaryset))
   
@@ -19,47 +17,47 @@ starting <- function(res,data, W){
 
 right_case <- function(result,sumup,i){
   ## Checks if primary set is correctly (A, B)
-  if (all(c('A','B') %in% result$W1$primarySet) & all(c('C','D','E') %notin% result$W1$primarySet)){
+  if (all(c('A','B') %in% result$W$primarySet) & all(c('C','D','E') %notin% result$W$primarySet)){
     sumup[i, 6] <- 1
   }
   
   ## Checks if primary set contains other nodes than (A, B)
-  if (all(c('A','B') %in% result$W1$primarySet) & any(c('C','D','E') %in% result$W1$primarySet)){
+  if (all(c('A','B') %in% result$W$primarySet) & any(c('C','D','E') %in% result$W$primarySet)){
     sumup[i, 7] <- 1
   }
   
   
   ## Checks if there is A, not B, and others
-  if (('A' %in% result$W1$primarySet & 'B' %notin% result$W1$primarySet) & any(c('C','D','E') %in% result$W1$primarySet)){
+  if (('A' %in% result$W$primarySet & 'B' %notin% result$W$primarySet) & any(c('C','D','E') %in% result$W$primarySet)){
     sumup[i, 8] <- 1
   }
   
   
   ## Checks if there is not A, yes B and others
   
-  if (('A' %notin% result$W1$primarySet & 'B' %in% result$W1$primarySet) & any(c('C','D','E') %in% result$W1$primarySet)){
+  if (('A' %notin% result$W$primarySet & 'B' %in% result$W$primarySet) & any(c('C','D','E') %in% result$W$primarySet)){
     sumup[i, 9] <- 1
   }
   
   ## Checks if there is not A, nor B but others
-  if (all(c('A','B') %notin% result$W1$primarySet) & any(c('C','D','E') %in% result$W1$primarySet)){
+  if (all(c('A','B') %notin% result$W$primarySet) & any(c('C','D','E') %in% result$W$primarySet)){
     sumup[i, 10] <- 1
   }
   
   
   ## Checks if primary set is empty
-  if (all(c('A','B','C','D','E') %notin% result$W1$primarySet)){
+  if (all(c('A','B','C','D','E') %notin% result$W$primarySet)){
     sumup[i, 11] <- 1
   }
   
   
   ## Checks if primary set is full
-  if (all(c('A','B','C','D','E') %in% result$W1$primarySet)){
+  if (all(c('A','B','C','D','E') %in% result$W$primarySet)){
     sumup[i, 12] <- 1
   }
   
   ## Checks if primary set is single
-  if (length(result$W1$primarySet) == 1){
+  if (length(result$W$primarySet) == 1){
     sumup[i, 13] <- 1
   }
   
@@ -82,7 +80,8 @@ summarize <- function(values, sumup,i){
 }
 
 
-main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores){
+main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
+                 equal = F, permute = TRUE, which_graph = 1){
   
   sumup <- lapply(1:10, function(x) matrix(0, n_simulation, 13))
   
@@ -100,17 +99,27 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores){
     start <- Sys.time()
     
     set.seed(i)
-    data <- sim_data(W1,W2,n,p)
+    
+    graphs <- graph_generation(equal = equal)
+    data <- sim_data(graphs$W1,graphs$W2,n=n,p=p)
     
     transformation <- list(fit_raw, fit_sqrt, fit_log,
-                           fit_negative_dev, fit_pois_dev,
-                           fit_negative_pearson, fit_pois_pearson,
+                           # fit_negative_dev, fit_pois_dev,
+                           # fit_negative_pearson, fit_pois_pearson,
                            fit_pois_anscombe,
                            fit_negative_RQR, fit_pois_RQR)
     
     res <- lapply(transformation, function(x) x(data))
     
-    values <- starting(res, data, W)
+    if(which_graph ==1){
+      graph <- graphs$W1
+    } else {
+      graph <- graphs$W2
+    }
+    graph  <- as(graph, 'graphNEL')
+    
+    values <- starting(res, data, permute, graph = graph)
+    
     
     primary <- append(primary,list(values$primary))
     

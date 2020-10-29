@@ -1,15 +1,19 @@
-library(XMRF)
 
-W1 <- matrix(0, ncol = 5, nrow = 5)
-rownames(W1) <- colnames(W1) <- c('A', 'B', 'C', 'D', 'E')
-W1["A","B"] <- W1["B","A"] <- 1
-W1["B","C"] <- W1["C","B"] <- 1
-W1["C","D"] <- W1["D","C"] <- 1
-W1["D","E"] <- W1["E","D"] <- 1
-W1["C","E"] <- W1["E","C"] <- 1
+graph_generation <- function(equal = F){
+  
+  W1 <- matrix(0, ncol = 5, nrow = 5)
+  rownames(W1) <- colnames(W1) <- c('A', 'B', 'C', 'D', 'E')
+  W1["A","B"] <- W1["B","A"] <- 1
+  W1["B","C"] <- W1["C","B"] <- 1
+  W1["C","D"] <- W1["D","C"] <- 1
+  W1["D","E"] <- W1["E","D"] <- 1
+  W1["C","E"] <- W1["E","C"] <- 1
 
-W2 <- W1
-W2['A', 'B'] <- W2['B', 'A'] <- 0
+  W2 <- W1
+  if(equal==F) {W2['A', 'B'] <- W2['B', 'A'] <- 0}
+  return(list(W1=W1,W2=W2))
+
+}
 
 adj2A <-
   function(B,type="full"){

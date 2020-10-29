@@ -10,6 +10,7 @@ order_object <- function(sim1,sim2,n){
 }
 
 sim_data <- function(W1,W2,n,p){
+  
   sim1 <- XMRF.Sim(B = W1, n = n, p = p, model = 'LPGM', graph.type = 'scale-free')
   sim2 <- XMRF.Sim(B = W2, n = n, p = p, model = 'LPGM', graph.type = 'scale-free')
   
