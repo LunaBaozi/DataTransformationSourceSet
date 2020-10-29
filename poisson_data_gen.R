@@ -10,7 +10,7 @@ graph_generation <- function(equal = F){
   W1["C","E"] <- W1["E","C"] <- 1
 
   W2 <- W1
-  if(equal==F) {W2['A', 'B'] <- W2['B', 'A'] <- 0}
+  if(equal == F) {W2['A', 'B'] <- W2['B', 'A'] <- 0}
   return(list(W1=W1,W2=W2))
 
 }
