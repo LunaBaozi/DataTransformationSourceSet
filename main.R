@@ -88,6 +88,11 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
                          # fit_negative_pearson, fit_pois_pearson,
                          fit_pois_anscombe,
                          fit_negative_RQR, fit_pois_RQR)
+  names <- list("RAW", "SQRT", "LOG",
+                # "NB_DEV", "POIS_DEV",
+                # "NB_PEAR", "POIS_PEAR",
+                "POIS_ANSC",
+                "NB_RQR", "POIS_RQR")
   
   sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
@@ -148,11 +153,7 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   
   endtable_percent <- matrix(unlist(percent),nrow=length(transformation),byrow=T)
   
-  names <- list("RAW", "SQRT", "LOG",
-                "NB_DEV", "POIS_DEV",
-                "NB_PEAR", "POIS_PEAR",
-                "POIS_ANSC",
-                "NB_RQR", "POIS_RQR")
+
   
   names(sumup) <- names
   
