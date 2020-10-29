@@ -67,12 +67,12 @@ right_case <- function(result,sumup,i){
 
 summarize <- function(values, sumup,i){
   
-  sumup <- lapply(1:10, function(x){
+  sumup <- lapply(1:length(sumup), function(x){
     sumup[[x]][i,1:5] <- values$info_all[[x]]$variable[1:5,8];
     sumup[[x]]
   })
   
-  sumup <- lapply(1:10, function(x){sumup <- right_case(values$result[[x]],sumup[[x]],i);
+  sumup <- lapply(1:length(sumup), function(x){sumup <- right_case(values$result[[x]],sumup[[x]],i);
   sumup
   })
   
@@ -83,7 +83,13 @@ summarize <- function(values, sumup,i){
 main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
                  equal = F, permute = TRUE, which_graph = 1){
   
-  sumup <- lapply(1:10, function(x) matrix(0, n_simulation, 13))
+  transformation <- list(fit_raw, fit_sqrt, fit_log,
+                         # fit_negative_dev, fit_pois_dev,
+                         # fit_negative_pearson, fit_pois_pearson,
+                         fit_pois_anscombe,
+                         fit_negative_RQR, fit_pois_RQR)
+  
+  sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
   sumup <- lapply(sumup, function(x) {
     colnames(x) <- c('ptA', 'ptB', 'ptC', 'ptD', 'ptE',
@@ -102,12 +108,6 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     graphs <- graph_generation(equal = equal)
     data <- sim_data(graphs$W1,graphs$W2,n=n,p=p)
-    
-    transformation <- list(fit_raw, fit_sqrt, fit_log,
-                           # fit_negative_dev, fit_pois_dev,
-                           # fit_negative_pearson, fit_pois_pearson,
-                           fit_pois_anscombe,
-                           fit_negative_RQR, fit_pois_RQR)
     
     res <- lapply(transformation, function(x) x(data))
     
@@ -134,19 +134,19 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   ## Create a new matrix to store the mean values of the scores
   ## and the count of occurrences of each class
   
-  newmatrix <- lapply(1:10, function(x) matrix(0, nrow=1, ncol=13))
-  newmatrix <- lapply(1:10, function(x){newmatrix[[x]][,1:5] <- apply(sumup[[x]][,1:5],2,mean);newmatrix[[x]]})
-  newmatrix <- lapply(1:10, function(x){newmatrix[[x]][,6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1));newmatrix[[x]]})
+  newmatrix <- lapply(1:length(transformation), function(x) matrix(0, nrow=1, ncol=13))
+  newmatrix <- lapply(1:length(transformation), function(x){newmatrix[[x]][,1:5] <- apply(sumup[[x]][,1:5],2,mean);newmatrix[[x]]})
+  newmatrix <- lapply(1:length(transformation), function(x){newmatrix[[x]][,6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1));newmatrix[[x]]})
   
   
-  percent <- lapply(1:10, function(x) matrix(0, nrow=1, ncol=13))
-  percent <- lapply(1:10, function(x){percent[[x]][1:5] <- apply(sumup[[x]][,1:5],2,mean);percent[[x]]})
-  percent <- lapply(1:10, function(x){percent[[x]][6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1)/50);percent[[x]]})
+  percent <- lapply(1:length(transformation), function(x) matrix(0, nrow=1, ncol=13))
+  percent <- lapply(1:length(transformation), function(x){percent[[x]][1:5] <- apply(sumup[[x]][,1:5],2,mean);percent[[x]]})
+  percent <- lapply(1:length(transformation), function(x){percent[[x]][6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1)/50);percent[[x]]})
   
   
-  endtable_counts <- matrix(unlist(newmatrix),nrow=10,byrow=T)
+  endtable_counts <- matrix(unlist(newmatrix),nrow=length(transformation),byrow=T)
   
-  endtable_percent <- matrix(unlist(percent),nrow=10,byrow=T)
+  endtable_percent <- matrix(unlist(percent),nrow=length(transformation),byrow=T)
   
   names <- list("RAW", "SQRT", "LOG",
                 "NB_DEV", "POIS_DEV",

@@ -21,7 +21,7 @@ n <- 400
 p <- 5
 lambda_true <- 1
 lambda_noise <- 0.5
-number_cores <- 10
+number_cores <- 6
 
 # PARAMETRI
 ## I parametri sono quelli che tu avevi impostato più qualche altro
