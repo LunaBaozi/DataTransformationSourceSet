@@ -5,6 +5,13 @@ fit_pois_anscombe <- function(obj){
   res <- lapply(m, function(x) anscombe.residuals(x, phi = 1))
   
 }
+                
+fit_negative_anscombe <- function(obj){
+  
+  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 1)))
+             
+  res <- lapply(m, function(x) anscombe.residuals(x, phi = 1))
+}
 
 fit_negative_dev <- function(obj){
   
