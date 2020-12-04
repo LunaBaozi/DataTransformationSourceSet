@@ -17,6 +17,11 @@ starting <- function(res,data, permute, graph){
 }
 
 right_case <- function(result,sumup,i){
+  ## Checks if primary set is full
+  if (all(c('A','B','C','D','E') %in% result$graph$primarySet)){
+    sumup[i, 12] <- 1
+  }
+  
   ## Checks if primary set is correctly (A, B)
   if (all(c('A','B') %in% result$graph$primarySet) & all(c('C','D','E') %notin% result$graph$primarySet)){
     sumup[i, 6] <- 1
@@ -35,7 +40,6 @@ right_case <- function(result,sumup,i){
   
   
   ## Checks if there is not A, yes B and others
-  
   if (('A' %notin% result$graph$primarySet & 'B' %in% result$graph$primarySet) & any(c('C','D','E') %in% result$graph$primarySet)){
     sumup[i, 9] <- 1
   }
@@ -51,11 +55,6 @@ right_case <- function(result,sumup,i){
     sumup[i, 11] <- 1
   }
   
-  
-  ## Checks if primary set is full
-  if (all(c('A','B','C','D','E') %in% result$graph$primarySet)){
-    sumup[i, 12] <- 1
-  }
   
   ## Checks if primary set is single
   if (length(result$graph$primarySet) == 1){
@@ -98,9 +97,9 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
   sumup <- lapply(sumup, function(x) {
-    colnames(x) <- c('ptA', 'ptB', 'ptC', 'ptD', 'ptE',
-                     'AB', 'AB+al.', 'A+al.', 'B+al.', 'Other', 'Empty', 'Full',
-                     'Single');
+    colnames(x) <- c('A', 'B', 'C', 'D', 'E',
+                     'AB', 'AB+', 'A+', 'B+', 'O', 'E', 'F',
+                     'S');
     x
   })
   
@@ -160,9 +159,9 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   
   names(sumup) <- names
   
-  colnames <- c('ptA', 'ptB', 'ptC', 'ptD', 'ptE',
-                'AB', 'AB+al.', 'A+al.', 'B+al.', 'Other', 'Empty', 'Full',
-                'Single')
+  colnames <- c('A', 'B', 'C', 'D', 'E',
+                'AB', 'AB+', 'A+', 'B+', 'O', 'E', 'F',
+                'S')
   
   
   
