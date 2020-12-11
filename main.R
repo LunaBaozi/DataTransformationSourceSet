@@ -28,7 +28,7 @@ right_case <- function(result,sumup,i){
   }
   
   ## Checks if primary set contains other nodes than (A, B)
-  if (all(c('A','B') %in% result$graph$primarySet) & any(c('C','D','E') %in% result$graph$primarySet)){
+  if (all(c('A','B') %in% result$graph$primarySet) & any(c('C','D','E') %in% result$graph$primarySet)& !(all(c('A','B','C','D','E') %in% result$graph$primarySet))){
     sumup[i, 7] <- 1
   }
   
@@ -45,7 +45,7 @@ right_case <- function(result,sumup,i){
   }
   
   ## Checks if there is not A, nor B but others
-  if (all(c('A','B') %notin% result$graph$primarySet) & any(c('C','D','E') %in% result$graph$primarySet)){
+  if (all(c('A','B') %notin% result$graph$primarySet) & any(c('C','D','E') %in% result$graph$primarySet)& !(length(result$graph$primarySet) == 1)){
     sumup[i, 10] <- 1
   }
   
