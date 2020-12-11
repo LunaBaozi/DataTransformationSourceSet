@@ -8,16 +8,28 @@ fit_pois_anscombe <- function(obj){
                 
 fit_negative_anscombe <- function(obj){
   
-  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 1)))
-             
-  res <- lapply(m, function(x) anscombe.residuals(x, phi = 1))
+  data <- t(obj[,1:5])
+  rDGE <- DGEList(data)
+  disp <- estimateCommonDisp(rDGE)
+  model <- glmFit(rDGE, dispersion = disp$common.dispersion)
+  
+  dispersion <- matrix(disp$common.dispersion, nrow = nrow(data), ncol=ncol(data))
+  
+  negative_anscombe <- anscombe_negative_function(data,model$fitted.values,dispersion)
+  
+  res <- lapply(1:nrow(negative_anscombe), function(x) as.vector(t(negative_anscombe)[,x]))
 }
 
 fit_negative_dev <- function(obj){
   
-  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 1)))
+  data <- t(obj[,1:5])
+  rDGE <- DGEList(data)
+  disp <- estimateCommonDisp(rDGE)
+  model <- glmFit(rDGE, dispersion = disp$common.dispersion)
   
-  res <- lapply(m, function(x) resid(x))
+  negative_deviance<-  residuals(model, type="deviance")
+  
+  res <- lapply(1:nrow(negative_deviance), function(x) as.vector(t(negative_deviance)[,x]))
   
 }
 
@@ -40,9 +52,15 @@ fit_log <- function(obj){
 
 fit_negative_pearson <- function(obj){
   
-  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 1)))
+  data <- t(obj[,1:5])
+  rDGE <- DGEList(data)
+  disp <- estimateCommonDisp(rDGE)
+  model <- glmFit(rDGE, dispersion = disp$common.dispersion)
   
-  res <- lapply(m, function(x) resid(x, type = 'pearson'))
+  
+  negative_pearson <-  residuals(model, type="pearson")
+  
+  res <- lapply(1:nrow(negative_pearson), function(x) as.vector(t(negative_pearson)[,x]))
   
 }
 

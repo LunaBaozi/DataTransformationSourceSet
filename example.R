@@ -7,6 +7,8 @@ library(statmod)
 library(MASS) 
 library(surveillance) 
 library(XMRF)
+library(edgeR)
+library(RUVSeq)
 
 setwd("~/Scrivania/DataTransformationSourceSet")
 source('functions.R')
@@ -31,7 +33,7 @@ number_cores <- 6
 ## permute = F calcola i p-value asintotici
 ## which_graph decide quale dei due grafi vuoi come riferimento, 1 o 2
 
-system.time(res <- main(n_simulation = 5000, n=n, p=p,
+system.time(res <- main(n_simulation = 10, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
                         number_cores = number_cores, 
                         equal = FALSE, permute = TRUE, which_graph = 1))

@@ -1,5 +1,13 @@
 source('poisson_data_gen.R')
 
+anscombe_negative_function <- function(conte, mu, dispersion){
+  term1 <- (3/dispersion)*((1+dispersion*conte)^(2/3)-(1+dispersion*mu)^(2/3))
+  term2 <- 3*(conte^(2/3)-mu^(2/3))
+  term3 <- 2*(mu + dispersion*(mu^2))^1/6
+  
+  res <- (term1 + term2)/ term3
+}
+
 order_object <- function(sim1,sim2,n){
   
   x1 <- t(sim1$X)

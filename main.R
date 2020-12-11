@@ -84,15 +84,23 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
                  equal = FALSE, permute = TRUE, which_graph = 1){
   
   transformation <- list(fit_raw, fit_sqrt, fit_log,
-                         # fit_negative_dev, fit_pois_dev,
-                         # fit_negative_pearson, fit_pois_pearson,
+                         fit_negative_anscombe,
+                         fit_negative_dev,
+                         fit_pois_dev,
+                         # fit_negative_pearson, 
+                         fit_pois_pearson,
                          fit_pois_anscombe,
-                         fit_negative_RQR, fit_pois_RQR)
+                         fit_negative_RQR, 
+                         fit_pois_RQR)
   names <- list("RAW", "SQRT", "LOG",
-                # "NB_DEV", "POIS_DEV",
-                # "NB_PEAR", "POIS_PEAR",
+                "NB_ANSC",
+                "NB_DEV",
+                "POIS_DEV",
+                # "NB_PEAR",
+                "POIS_PEAR",
                 "POIS_ANSC",
-                "NB_RQR", "POIS_RQR")
+                "NB_RQR",
+                "POIS_RQR")
   
   sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
@@ -136,6 +144,7 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     message("Iteration number ", i)
     message("Time consumption ",finish-start)
+   
   }
   
   ## Create a new matrix to store the mean values of the scores
@@ -145,28 +154,28 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   newmatrix <- lapply(1:length(transformation), function(x){newmatrix[[x]][,1:5] <- apply(sumup[[x]][,1:5],2,mean);newmatrix[[x]]})
   newmatrix <- lapply(1:length(transformation), function(x){newmatrix[[x]][,6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1));newmatrix[[x]]})
   
-  
+
   percent <- lapply(1:length(transformation), function(x) matrix(0, nrow=1, ncol=13))
   percent <- lapply(1:length(transformation), function(x){percent[[x]][1:5] <- apply(sumup[[x]][,1:5],2,mean);percent[[x]]})
-  percent <- lapply(1:length(transformation), function(x){percent[[x]][6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1)/50);percent[[x]]})
+  percent <- lapply(1:length(transformation), function(x){percent[[x]][6:13] <- apply(sumup[[x]][,6:13],2,function(x) sum(x==1)/n_simulation);percent[[x]]})
   
-  
+
   endtable_counts <- matrix(unlist(newmatrix),nrow=length(transformation),byrow=T)
   
   endtable_percent <- matrix(unlist(percent),nrow=length(transformation),byrow=T)
   
-
   
+
   names(sumup) <- names
   
   colnames <- c('A', 'B', 'C', 'D', 'E',
                 'AB', 'AB+', 'A+', 'B+', 'O', 'E', 'F',
                 'S')
+
   
+
   
-  
-  
-  colnames(endtable_counts) <- colnames(endtable_percent) <- colnames 
+  colnames(endtable_counts) <- colnames(endtable_percent) <- colnames
   
   rownames(endtable_counts) <- rownames(endtable_percent) <- names
   
