@@ -27,8 +27,8 @@ sim_data_p <- function(W1,W2,n,p, lambda_true,lambda_noise){
 
 sim_data_nb <- function(W1,W2,n,p, mu ,mu.noise, theta){
   
-  sim1 <- nbinom.Simdata(n=n, p =p ,B = W1, mu, mu.nois, theta)
-  sim2 <- nbinom.Simdata(n=n, p =p ,B = W2, mu, mu.nois, theta)
+  sim1 <- nbinom.Simdata(n=n, p =p ,B = W1, mu, mu.noise, theta)
+  sim2 <- nbinom.Simdata(n=n, p =p ,B = W2, mu, mu.noise, theta)
   
   X <- rbind(sim1, sim2)
   X <- cbind(X, rep(c(1, 2), each = n))

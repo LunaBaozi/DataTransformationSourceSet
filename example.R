@@ -35,7 +35,8 @@ number_cores <- 6
 
 system.time(res <- main(n_simulation = 10, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
-                        number_cores = number_cores, 
-                        equal = FALSE, permute = TRUE, which_graph = 1))
+                        number_cores = number_cores,
+                        mu = 2, mu.noise = 1, theta = 4,
+                        equal = FALSE, permute = TRUE, which_graph = 1, model="nb"))
 
 save(res,file="results_1_05.RData")
