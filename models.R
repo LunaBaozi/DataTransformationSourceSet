@@ -8,7 +8,8 @@ fit_pois_anscombe <- function(obj){
                 
 fit_negative_anscombe <- function(obj){
   
-  data <- t(obj[,1:5])
+  data <- t(obj)
+  data <- data[1:5,]
   rDGE <- DGEList(data)
   disp <- estimateCommonDisp(rDGE)
   model <- glmFit(rDGE, dispersion = disp$common.dispersion)
@@ -17,22 +18,22 @@ fit_negative_anscombe <- function(obj){
   
   negative_anscombe <- anscombe_negative_function(data,model$fitted.values,dispersion)
   
-  res <- lapply(1:nrow(negative_anscombe), function(x) as.vector(t(negative_anscombe)[,x]))
+  res <- lapply(1:nrow(negative_anscombe), function(x) negative_anscombe[x,])
 }
 
 fit_negative_dev <- function(obj){
   
-  data <- t(obj[,1:5])
+  data <- t(obj)
+  data <- data[1:5,]
   rDGE <- DGEList(data)
   disp <- estimateCommonDisp(rDGE)
   model <- glmFit(rDGE, dispersion = disp$common.dispersion)
   
   negative_deviance<-  residuals(model, type="deviance")
   
-  res <- lapply(1:nrow(negative_deviance), function(x) as.vector(t(negative_deviance)[,x]))
+  res <- lapply(1:nrow(negative_deviance), function(x) negative_deviance[x,])
   
 }
-
 
 fit_pois_dev <- function(obj){
   
