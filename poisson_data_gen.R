@@ -1,4 +1,5 @@
 
+#' It returns two adjaency matrix, equal if equal param set TRUE
 graph_generation <- function(equal = F){
   
   W1 <- matrix(0, ncol = 5, nrow = 5)
@@ -48,7 +49,7 @@ rmpois <-
     return(tmp)
   }
 
-XMRF.Sim <- function(B, n, p, model, graph.type){
+XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5){
   mydata <- list()
   #B <- W1 #simGraph(p=p, type=graph.type)
   mydata$B <- B

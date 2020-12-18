@@ -121,7 +121,7 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     graphs <- graph_generation(equal = equal) 
     
-    data <- sim_data(graphs$W1,graphs$W2,n=n,p=p)
+    data <- sim_data(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise)
     
     res <- lapply(transformation, function(x) x(data))
     
