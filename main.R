@@ -81,7 +81,7 @@ summarize <- function(values, sumup,i){
 
 
 main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
-                 equal = FALSE, permute = TRUE, which_graph = 1){
+                 equal = FALSE, permute = TRUE, which_graph = 1, mu ,mu.noise, theta, model = "nb"){
   
   transformation <- list(fit_raw, fit_sqrt, fit_log,
                          fit_negative_anscombe,
@@ -121,7 +121,9 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     graphs <- graph_generation(equal = equal) 
     
+    if(model=="pois"){
     data <- sim_data(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise)
+    } else {data <- sim_data_nb(graphs$W1,graphs$W2,n=n,p=p, mu ,mu.noise, theta)}
     
     res <- lapply(transformation, function(x) x(data))
     
