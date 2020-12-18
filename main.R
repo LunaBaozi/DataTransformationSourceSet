@@ -122,7 +122,7 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     graphs <- graph_generation(equal = equal) 
     
     if(model=="pois"){
-    data <- sim_data(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise)
+    data <- sim_data_p(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise)
     } else {data <- sim_data_nb(graphs$W1,graphs$W2,n=n,p=p, mu ,mu.noise, theta)}
     
     res <- lapply(transformation, function(x) x(data))
