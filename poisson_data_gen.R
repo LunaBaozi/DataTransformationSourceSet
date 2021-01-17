@@ -78,7 +78,7 @@ XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5)
 
 
 nbinom.Simdata <- function(n, p,B,mu,mu.noise,theta){
-  set.seed(123)
+ 
   # create "adjacency" matrix A from the adjacency matrix B
   if(nrow(B) != ncol(B)){
     print("not a symmetric matrix")

@@ -1,13 +1,14 @@
-starting <- function(res,data, permute, graph){
+starting <- function(res,data, permute, graph, number_cores){
   
   object <- lapply(res, function(x) order_res(data, x))
   
   gh <- list()
   gh$graph <- graph
   result <- mclapply(object, function(x) sourceSet(gh, x$all, x$classes, seed = 1234,
-                                                   permute = permute, shrink = TRUE),mc.cores = number_cores)
-  
-
+                                                   permute = permute, shrink = TRUE),
+                     mc.cores=number_cores)
+  # result <- lapply(object, function(x) sourceSet(gh, x$all, x$classes, seed = 1234,
+  #                                                  permute = permute, shrink = TRUE))
   info_all <- lapply(result, function(x) infoSource(x, map.name.variable = nodes(gh$graph)))
   
   primaryset <- lapply(result, function(x) list(x$graph$primarySet))
@@ -81,26 +82,27 @@ summarize <- function(values, sumup,i){
 
 
 main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
-                 equal = FALSE, permute = TRUE, which_graph = 1, mu ,mu.noise, theta, model = "nb"){
+                 equal = FALSE, permute = TRUE, which_graph = 1,
+                 mu ,mu.noise, theta, model){
   
   transformation <- list(fit_raw, fit_sqrt, fit_log,
                          fit_negative_anscombe,
                          fit_negative_dev,
+                         fit_negative_pearson,
+                         # fit_negative_RQR,
                          fit_pois_dev,
-                         # fit_negative_pearson, 
                          fit_pois_pearson,
-                         fit_pois_anscombe,
-                         fit_negative_RQR, 
-                         fit_pois_RQR)
+                         fit_pois_anscombe)
+                         # fit_pois_RQR)
   names <- list("RAW", "SQRT", "LOG",
                 "NB_ANSC",
                 "NB_DEV",
+                "NB_PEAR",
+                # "NB_RQR",
                 "POIS_DEV",
-                # "NB_PEAR",
                 "POIS_PEAR",
-                "POIS_ANSC",
-                "NB_RQR",
-                "POIS_RQR")
+                "POIS_ANSC")
+                # "POIS_RQR")
   
   sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
@@ -121,11 +123,13 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     graphs <- graph_generation(equal = equal) 
     
-    if(model=="pois"){
+    if(model=="poisson"){
+    theta = 0.1
     data <- sim_data_p(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise)
     } else {data <- sim_data_nb(graphs$W1,graphs$W2,n=n,p=p, mu ,mu.noise, theta)}
     
-    res <- lapply(transformation, function(x) x(data))
+    
+    res <- lapply(transformation, function(x) x(data, theta))
     
     if(which_graph == 1){
       graph <- graphs$W1
@@ -135,7 +139,8 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     graph  <- as(graph, 'graphNEL')
     
-    values <- starting(res, data, permute = permute, graph = graph)
+    values <- starting(res, data, permute = permute, graph = graph,
+                       number_cores = number_cores)
     
     
     primary <- append(primary,list(values$primary))
