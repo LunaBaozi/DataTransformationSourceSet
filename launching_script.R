@@ -12,10 +12,10 @@ library(XMRF)
 library(edgeR)
 library(RUVSeq)
 
-#setwd("~/Scrivania/DataTransformationSourceSet")
-setwd('~/Videos/finalfinal/DataTransformationSourceSet/')
+setwd("~/Scrivania/DataTransformationSourceSet")
 
-## source('example.R') # basic script
+dir.create('./Results', showWarnings = FALSE)
+
 
 ## Launches procedure on Poisson generated data
 ## mean = 1
@@ -30,5 +30,11 @@ source('POIS_1_01launch.R')
 ## Launches procedure on NegBin generated data
 ## mean = 1
 ## SNR = 0.5
-## theta = 2
+## theta = 0.2
 source('NB_1_05_2launch.R')
+
+## Launches procedure on NegBin generated data
+## mean = 1
+## SNR = 0.1
+## theta = 0.2
+source('NB_1_01_2launch.R')
