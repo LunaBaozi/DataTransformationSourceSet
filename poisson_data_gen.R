@@ -54,7 +54,7 @@ XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5)
   #B <- W1 #simGraph(p=p, type=graph.type)
   mydata$B <- B
   
-  if(model == "LPGM" || model == "SPGM" || model == "TPGM"){
+  # if(model == "LPGM" || model == "SPGM" || model == "TPGM"){
     ## implement the speed.pois="fast" in mp.generator
     lambda = lambda_true #2
     lambda.c = lambda_noise #0.5
@@ -65,14 +65,26 @@ XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5)
     nonzero.sigma = ltri.sigma[which(ltri.sigma !=0 )]
     Y.lambda = c(rep(lambda,nrow(sigma)), nonzero.sigma)
     
-    Y = rmpois(n,Y.lambda)
-    X =A%*%Y
-    # add the labmda.c to all the nodes. 
-    X = X + rmpois(ncol(X), rep(lambda.c,nrow(X)))
+    if(modelgen=="poisson"){
+      
+      Y = rmpois(n,Y.lambda)
+      X =A%*%Y
+      # add the labmda.c to all the nodes. 
+      X = X + rmpois(ncol(X), rep(lambda.c,nrow(X)))
+    } else if (modelgen=="gamma-poisson"){
+      
+      epsilon <- rgamma(n,alpha,alpha)
+      Y =  do.call(rbind, parallel::mclapply(Y.lambda,function(i) { rpois(n,i*epsilon)}))
+      X = A%*%Y
+      epsilon <- rgamma(n,alpha,alpha)
+      X2 <- do.call(rbind, parallel::mclapply(rep(lambda.c,nrow(X)),function(i) { rpois(n,i)}))
+      X = X + X2
+    }
+    
     mydata$X=X
     mydata$A=A
     mydata$sigma=sigma
-  }
+  # }
   return(mydata)
 }
 
