@@ -49,7 +49,7 @@ rmpois <-
     return(tmp)
   }
 
-XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5){
+XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5, modelgen,alpha){
   mydata <- list()
   #B <- W1 #simGraph(p=p, type=graph.type)
   mydata$B <- B
@@ -89,7 +89,7 @@ XMRF.Sim <- function(B, n, p, model, graph.type, lambda_true=2,lambda_noise=0.5)
 }
 
 
-nbinom.Simdata <- function(n, p,B,mu,mu.noise,theta){
+nbinom.Simdata <- function(n, p,B,lambda_true,lambda_noise,theta){
  
   # create "adjacency" matrix A from the adjacency matrix B
   if(nrow(B) != ncol(B)){
@@ -109,15 +109,15 @@ nbinom.Simdata <- function(n, p,B,mu,mu.noise,theta){
     }
   }
   ## vector mean
-  sigma <- mu*B
+  sigma <- lambda_true*B
   ltri.sigma <-sigma[lower.tri(sigma)]
   nonzero.sigma <- ltri.sigma[which(ltri.sigma !=0 )]
-  Y.mu <- c(rep(mu,nrow(sigma)), nonzero.sigma)
+  Y.mu <- c(rep(lambda_true,nrow(sigma)), nonzero.sigma)
   ## data matrix X
   Y <-  matrix(unlist(do.call(rbind, parallel::mclapply(Y.mu,function(i) {rnbinom(n,mu=i,theta)}))),length(Y.mu),n)
   X <- A%*%Y
   # add the labmda.c to all the nodes.
-  X <- X + matrix(unlist(do.call(rbind, parallel::mclapply(rep(mu.noise,p),function(i) {rnbinom(n,mu=i,theta)}))),p,n)
+  X <- X + matrix(unlist(do.call(rbind, parallel::mclapply(rep(lambda_noise,p),function(i) {rnbinom(n,mu=i,theta)}))),p,n)
   
   return(t(X))
 }

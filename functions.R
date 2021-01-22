@@ -17,18 +17,18 @@ order_object <- function(sim1,sim2,n){
   
 }
 
-sim_data_p <- function(W1,W2,n,p, lambda_true,lambda_noisemodelgen = "poisson", gamma = 1){
+sim_data_p <- function(W1,W2,n,p, lambda_true,lambda_noise, alpha = 1,modelgen = "poisson"){
   
-  sim1 <- XMRF.Sim(B = W1, n = n, p = p, model = 'LPGM', graph.type = 'scale-free', lambda_true,lambda_noise,modelgen = "poisson", gamma = 1)
-  sim2 <- XMRF.Sim(B = W2, n = n, p = p, model = 'LPGM', graph.type = 'scale-free', lambda_true,lambda_noise, modelgen = "poisson", gamma = 1)
+  sim1 <- XMRF.Sim(B = W1, n = n, p = p, model = 'LPGM', graph.type = 'scale-free', lambda_true,lambda_noise,modelgen = modelgen, alpha = alpha)
+  sim2 <- XMRF.Sim(B = W2, n = n, p = p, model = 'LPGM', graph.type = 'scale-free', lambda_true,lambda_noise, modelgen = modelgen, alpha = alpha)
   
   X <- order_object(sim1,sim2,n)
 }
 
 sim_data_nb <- function(W1,W2,n,p, mu ,mu.noise, theta){
   
-  sim1 <- nbinom.Simdata(n=n, p =p ,B = W1, mu, mu.noise, theta)
-  sim2 <- nbinom.Simdata(n=n, p =p ,B = W2, mu, mu.noise, theta)
+  sim1 <- nbinom.Simdata(n=n, p =p ,B = W1, lambda_true,lambda_noise, theta)
+  sim2 <- nbinom.Simdata(n=n, p =p ,B = W2, lambda_true,lambda_noise, theta)
   
   X <- rbind(sim1, sim2)
   X <- cbind(X, rep(c(1, 2), each = n))
