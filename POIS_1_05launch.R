@@ -1,6 +1,16 @@
 ## Launches procedure to generate Poisson data with
 ## given parameters: mu = 1, SNR = 0.5
-
+library(SourceSet)
+library(Rgraphviz)
+library(graphite)
+library(graph)
+library(Biobase)
+library(statmod)
+library(MASS) 
+library(surveillance) 
+library(XMRF)
+library(edgeR)
+library(RUVSeq)
 source('functions.R')
 
 source('models.R')
@@ -20,6 +30,6 @@ system.time(res <- main(n_simulation = 5000, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
                         number_cores = number_cores,
                         equal = FALSE, permute = TRUE, which_graph = 1,
-                        mu = 10, mu.noise = 1, theta = 0.2, model="poisson"))
+                        model="poisson"))
 
 save(res,file = "./Results/resultsPOIS_1_05.RData")
