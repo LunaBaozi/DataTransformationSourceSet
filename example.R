@@ -39,10 +39,10 @@ number_cores <- 10
 
 
 
-system.time(ras <- main(n_simulation = 100, n=n, p=p,
+system.time(ras <- main(n_simulation = 1000, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
-                        number_cores = number_cores,
+                        number_cores = 2,
                         equal = FALSE, permute = TRUE, which_graph = 1,
-                        mu = 10, mu.noise = 1, theta = 0.2, model="nb"))
+                        theta = 0.2, model="nb"))
 
 save(res,file="results_1_05.RData")

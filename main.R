@@ -83,26 +83,28 @@ summarize <- function(values, sumup,i){
 
 main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
                  equal = FALSE, permute = TRUE, which_graph = 1,
-                  theta, model, alpha){
+                theta, model, alpha){
   
-  transformation <- list(fit_raw, fit_sqrt, fit_log,
+  transformation <- list(fit_raw,
+                         fit_sqrt, fit_log,
                          fit_negative_anscombe,
                          fit_negative_dev,
                          fit_negative_pearson,
-                         # fit_negative_RQR,
+                         fit_negative_RQR,
                          fit_pois_dev,
                          fit_pois_pearson,
-                         fit_pois_anscombe)
-                         # fit_pois_RQR)
-  names <- list("RAW", "SQRT", "LOG",
+                         fit_pois_anscombe,
+                         fit_pois_RQR)
+  names <- list("RAW", 
+                "SQRT", "LOG",
                 "NB_ANSC",
                 "NB_DEV",
                 "NB_PEAR",
-                # "NB_RQR",
+                "NB_RQR",
                 "POIS_DEV",
                 "POIS_PEAR",
-                "POIS_ANSC")
-                # "POIS_RQR")
+                "POIS_ANSC",
+                 "POIS_RQR")
   
   sumup <- lapply(1:length(transformation), function(x) matrix(0, n_simulation, 13))
   
@@ -124,13 +126,13 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     graphs <- graph_generation(equal = equal) 
     
     if(model=="poisson"){
-    theta <- 0.1
+    theta <- 1000
     data <- sim_data_p(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise, modelgen="poisson")
     } else if(model=="gamma-poisson"){
-      theta <- 0.1
+      theta <- 1000
       data <- sim_data_p(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise, modelgen="gamma-poisson", alpha = alpha)
     } else {
-      data <- sim_data_nb(graphs$W1,graphs$W2,n=n,p=p, lambda_true,lambda_noise, theta)}
+      data <- sim_data_nb(graphs$W1,graphs$W2,n=n,p=p, lambda_true = lambda_true,lambda_noise = lambda_noise, theta=theta)}
     
     
     res <- lapply(transformation, function(x) x(data, theta))

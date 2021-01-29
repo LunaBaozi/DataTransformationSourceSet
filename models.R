@@ -55,9 +55,12 @@ fit_raw <- function(obj,...){
 
 
 fit_negative_RQR <- function(obj,theta){
-
-  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = as.numeric(theta))))
   
+  if (theta == 0.1){
+    m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 0.1)))
+  } else  if (theta == 0.2){
+  m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 0.2)))
+  } else if(theta == 1000){m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = negative.binomial(theta = 1000)))}
   res <- lapply(m, function(x) qres.nbinom(x))
   
 }
@@ -65,8 +68,9 @@ fit_negative_RQR <- function(obj,theta){
 fit_pois_RQR <- function(obj,...){
   
   m <- apply(obj[,1:5], 2, function(x) glm(x ~ 1, family = poisson))
-  res <- lapply(m, function(x) qres.pois(x))
   
+  res <- lapply(m, function(x) qres.pois(x))
+  res <-lapply(res, function(x) {x[is.infinite(x)]<-5;x})
 }
 
 fit_pois_pearson <- function(obj,...){

@@ -114,10 +114,11 @@ nbinom.Simdata <- function(n, p,B,lambda_true,lambda_noise,theta){
   nonzero.sigma <- ltri.sigma[which(ltri.sigma !=0 )]
   Y.mu <- c(rep(lambda_true,nrow(sigma)), nonzero.sigma)
   ## data matrix X
-  Y <-  matrix(unlist(do.call(rbind, parallel::mclapply(Y.mu,function(i) {rnbinom(n,mu=i,theta)}))),length(Y.mu),n)
+
+  Y <-  matrix(unlist(do.call(rbind,parallel::mclapply(Y.mu,function(i) {rnbinom(n,mu=i,size = theta)}))),length(Y.mu),n)
   X <- A%*%Y
   # add the labmda.c to all the nodes.
-  X <- X + matrix(unlist(do.call(rbind, parallel::mclapply(rep(lambda_noise,p),function(i) {rnbinom(n,mu=i,theta)}))),p,n)
+  X <- X + matrix(unlist(do.call(rbind, parallel::mclapply(rep(lambda_noise,p),function(i) {rnbinom(n,mu=i,size =theta)}))),p,n)
   
   return(t(X))
 }

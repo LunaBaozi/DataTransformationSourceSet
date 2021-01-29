@@ -26,10 +26,10 @@ lambda_noise <- 0.5
 number_cores <- 10
 
 
-system.time(res <- main(n_simulation = 5000, n=n, p=p,
+system.time(res_P1_05 <- main(n_simulation = 5000, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
                         number_cores = number_cores,
                         equal = FALSE, permute = TRUE, which_graph = 1,
                         model="poisson"))
 
-save(res,file = "./Results/resultsPOIS_1_05.RData")
+save(res_P1_05,file = "./Results/resultsPOIS_1_05.RData")
