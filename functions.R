@@ -37,12 +37,12 @@ sim_data_nb <- function(W1,W2,n,p, lambda_true ,lambda_noise, theta){
 
 order_res <- function(obj, res){
   
-  data_all <- matrix(c(res[[1]], res[[2]], res[[3]], res[[4]], res[[5]]), 800, 5)
+  data_all <- matrix(c(res[[1]], res[[2]], res[[3]], res[[4]], res[[5]]), (2*n), 5)
   classes <- obj[,6] 
-  data_cond1 <- data_all[1:400,]
-  data_cond2 <- data_all[401:800,]
+  data_cond1 <- data_all[1:n,]
+  data_cond2 <- data_all[(n+1):(2*n),]
   colnames(data_all) <- c('A', 'B', 'C', 'D', 'E')
-  rownames(data_all) <- c(1:800)
+  rownames(data_all) <- c(1:(2*n))
   
   return(list(all = data_all, cond1 = data_cond1, cond2 = data_cond2, classes=classes))
 }
