@@ -23,7 +23,7 @@ n <- 400
 p <- 5
 lambda_true <- 1
 lambda_noise <- 0.5
-number_cores <- 10
+number_cores <- 2
 
 
 system.time(res_P1_05 <- main(n_simulation = 5000, n=n, p=p,

@@ -11,6 +11,7 @@ library(surveillance)
 library(XMRF)
 library(edgeR)
 library(RUVSeq)
+library(tidyverse)
 
 source('functions.R')
 
@@ -20,7 +21,7 @@ source('main.R')
 
 `%notin%` <- Negate(`%in%`)
 
-n <- 400
+n <- 40
 p <- 5
 lambda_true <- 1
 lambda_noise <- 0.1

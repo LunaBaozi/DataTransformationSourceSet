@@ -35,7 +35,7 @@ sim_data_nb <- function(W1,W2,n,p, lambda_true ,lambda_noise, theta){
 }
 
 
-order_res <- function(obj, res){
+order_res <- function(obj, res, n){
   
   data_all <- matrix(c(res[[1]], res[[2]], res[[3]], res[[4]], res[[5]]), (2*n), 5)
   classes <- obj[,6] 

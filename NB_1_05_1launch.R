@@ -11,6 +11,9 @@ library(surveillance)
 library(XMRF)
 library(edgeR)
 library(RUVSeq)
+library(tidyverse)
+
+setwd("~/Scrivania/DataTransformationSourceSet")
 source('functions.R')
 
 source('models.R')
@@ -27,10 +30,10 @@ number_cores <- 10
 theta <- 0.1
 
 
-system.time(res_NB1_05_01 <- main(n_simulation = 5000, n=n, p=p,
+system.time(res_NB1_05_01_list <- main_list(n_simulation = 5000, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
                         number_cores = number_cores,
                         equal = FALSE, permute = TRUE, which_graph = 1,
-                        model="negbin", theta = theta))
+                        model="negbin", theta = theta, n_group = 10))
 
-save(res_NB1_05_01,file= "./Results/resultsNB_1_05_2.RData")
+save(res_NB1_05_01_list,file= "./Results/resultsNB_1_05_2_list.RData")
