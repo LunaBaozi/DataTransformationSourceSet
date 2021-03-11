@@ -14,13 +14,13 @@ library(rlist)
 
 path <- getwd()
 
-source(paste0(path,'/poisson_data_gen.R'))
+source(paste0(path,'../DataTransformationSourceSet/poisson_data_gen.R'))
 
-source(paste0(path,'/functions.R'))
+source(paste0(path,'../DataTransformationSourceSet/functions.R'))
 
-source(paste0(path,'/models.R'))
+source(paste0(path,'../DataTransformationSourceSet/models.R'))
 
-source(paste0(path,'/main.R'))
+source(paste0(path,'../DataTransformationSourceSet/main.R'))
 `%notin%` <- Negate(`%in%`)
 
 n <- 400
