@@ -20,7 +20,7 @@ source('main.R')
 
 `%notin%` <- Negate(`%in%`)
 
-n <- 50
+n <- 400
 p <- 5
 lambda_true <- 1
 lambda_noise <- 0.5
@@ -40,10 +40,10 @@ n_group = 10
 
 
 
-system.time(ras <- main_list(n_simulation = 10, n=n, p=p,
+system.time(ras <- main_list(n_simulation = 2, n=n, p=p,
                         lambda_true = lambda_true, lambda_noise = lambda_noise,
-                        number_cores = 2,
+                        number_cores = 10,
                         equal = FALSE, permute = TRUE, which_graph = 1,
-                        theta = 0.2, model="nb", n_group = n_group))
+                        theta = 0.2, model="negbin", n_group = n_group))
 
 save(res,file="results_1_05.RData")

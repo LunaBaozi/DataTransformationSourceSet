@@ -1,4 +1,3 @@
-source('poisson_data_gen.R')
 
 anscombe_negative_function <- function(conte, mu, dispersion){
   term1 <- (3/dispersion)*((1+dispersion*conte)^(2/3)-(1+dispersion*mu)^(2/3))

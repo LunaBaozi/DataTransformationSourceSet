@@ -8,17 +8,18 @@ library(Biobase)
 library(statmod)
 library(MASS) 
 library(surveillance) 
-library(XMRF)
 library(edgeR)
 library(RUVSeq)
 library(tidyverse)
+path <- getwd()
 
-setwd("~/Scrivania/DataTransformationSourceSet")
-source('functions.R')
+source(paste0(path,'/poisson_data_gen.R'))
 
-source('models.R')
+source(paste0(path,'/functions.R'))
 
-source('main.R')
+source(paste0(path,'/models.R'))
+
+source(paste0(path,'/main.R'))
 
 `%notin%` <- Negate(`%in%`)
 
@@ -36,4 +37,4 @@ system.time(res_NB1_05_01_list <- main_list(n_simulation = 5000, n=n, p=p,
                         equal = FALSE, permute = TRUE, which_graph = 1,
                         model="negbin", theta = theta, n_group = 10))
 
-save(res_NB1_05_01_list,file= "./Results/resultsNB_1_05_2_list.RData")
+save(res_NB1_05_01_list,file= paste0(path,"/Results/resultsNB_1_05_2_list.RData"))

@@ -1,5 +1,4 @@
-## Launches procedure to generate Negative Binomial data with
-## given parameters: mu = 1, SNR = 0.5, theta = 2
+
 library(SourceSet)
 library(Rgraphviz)
 library(graphite)
@@ -8,15 +7,20 @@ library(Biobase)
 library(statmod)
 library(MASS) 
 library(surveillance) 
-library(XMRF)
 library(edgeR)
 library(RUVSeq)
+library(tidyverse)
+library(rlist)
 
-source('functions.R')
+path <- getwd()
 
-source('models.R')
+source(paste0(path,'/poisson_data_gen.R'))
 
-source('main.R')
+source(paste0(path,'/functions.R'))
+
+source(paste0(path,'/models.R'))
+
+source(paste0(path,'/main.R'))
 
 `%notin%` <- Negate(`%in%`)
 
@@ -33,4 +37,4 @@ system.time(res_NB1_01_01 <- main(n_simulation = 5000, n=n, p=p,
                         equal = FALSE, permute = TRUE, which_graph = 1,
                         theta = theta, model="negbin"))
 
-save(res_NB1_01_01,file= "./Results/resultsNB_1_01_2.RData")
+save(res_NB1_01_01,file= paste0(path,"/Results/resultsNB_1_01_01.RData"))

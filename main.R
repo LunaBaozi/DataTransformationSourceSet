@@ -109,18 +109,17 @@ summarize <- function(values, sumup,i){
 
 summarize_list <- function(values, sumup,i){
   
-  sumup <- lapply(1:length(sumup), function(x){ lapply(1:length(x), function(y){
-    sumup[[x]][[y]][i,1:5] <- values$info_all[[x]][[y]]$variable[1:5,8];
-    sumup[[x]][[y]]
-  });sumup[[x]]}
-  )
+  for(j in (1:length(sumup))){
+   for(t in(1:length(sumup[[j]]))){ 
+    sumup[[j]][[t]][i,1:5] <- values$info_all[[j]][[t]]$variable[1:5,8]
+  }}
   
-  sumup <- lapply(1:length(sumup), function(x){ lapply(1:length(x), function(y) {
-    sumup[[x]][[y]] <- right_case(values$result[[x]][[y]],sumup[[x]][[y]],i);
-  sumup[[x]][[y]]
-  }); sumup[[x]]}
-    )
+  for(j in (1:length(sumup))){
+    for(t in(1:length(sumup[[j]]))){ 
+      sumup[[j]][[t]] <- right_case(values$result[[j]][[t]],sumup[[j]][[t]],i)
+    }}
   
+  sumup
 }
 
 main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
@@ -163,8 +162,6 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     start <- Sys.time()
     
-    set.seed(i)
-    
     graphs <- graph_generation(equal = equal) 
     
     if(model=="poisson"){
@@ -193,7 +190,7 @@ main <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     primary <- append(primary,list(values$primary))
     
-    sumup <- summarize(values_s, sumup_s,i)
+    sumup <- summarize(values, sumup,i)
     
     finish <- Sys.time()
     
@@ -274,8 +271,6 @@ main_list <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
     
     start <- Sys.time()
     
-    set.seed(i)
-    
     graphs <- graph_generation(equal = equal) 
     
     if(model=="poisson"){
@@ -323,33 +318,46 @@ main_list <- function(n_simulation,n,p,lambda_true, lambda_noise, number_cores,
   ## Create a new matrix to store the mean values of the scores
   ## and the count of occurrences of each class
   newmatrix <- lapply(1:length(transformation), function(x) lapply(1:n_group,function(y) matrix(0, nrow=1, ncol=13)))
-  
-  newmatrix <- lapply(1:length(transformation), function(x){
-    lapply(1:n_group, function(y){
-    newmatrix[[x]][[y]][,1:5] <- apply(sumup[[x]][[y]][,1:5],2,mean);newmatrix[[x]][[y]]
-    });newmatrix[[x]]})
-  
-  newmatrix <- lapply(1:length(transformation), function(x){
-    lapply(1:n_group, function(y){
-      newmatrix[[x]][[y]][,6:13] <- apply(sumup[[x]][[y]][,6:13],2,function(x) sum(x==1));newmatrix[[x]][[y]]
-      });newmatrix[[x]]})
-  
-  
   percent <- lapply(1:length(transformation), function(x) lapply(1:n_group,function(y) matrix(0, nrow=1, ncol=13)))
   
-  percent <- lapply(1:length(transformation), function(x){
-    lapply(1:n_group, function(y){
-    percent[[x]][[y]][1:5] <- apply(sumup[[x]][[y]][,1:5],2,mean);percent[[x]][[y]]
-    });percent[[x]]})
+  for(j in (1:length(transformation))){
+    for(t in(1:n_group)){ 
+      newmatrix[[j]][[t]][,1:5] <- percent[[j]][[t]][,1:5] <- apply(sumup[[j]][[t]][,1:5],2,mean)
+    }}
   
-  percent <- lapply(1:length(transformation), function(x){
-    lapply(1:n_group, function(y){
-     percent[[x]][[y]][6:13] <- apply(sumup[[x]][[y]][,6:13],2,function(x) sum(x==1)/n_simulation);percent[[x]][[y]]
-     });percent[[x]]})
+  for(j in (1:length(transformation))){
+    for(t in(1:n_group)){ 
+      newmatrix[[j]][[t]][,6:13] <- apply(sumup[[j]][[t]][,6:13],2,function(x) sum(x==1))
+    }}
   
   
-
+  for(j in (1:length(transformation))){
+    for(t in(1:n_group)){ 
+      percent[[j]][[t]][6:13] <- apply(sumup[[j]][[t]][,6:13],2,function(x) sum(x==1)/n_simulation)
+    }}
   
-
-  return(list(table_fin = newmatrix, perc_fin = percent))
+  group_new <- list()
+  per_new <- list()
+  for(i in 1:n_group){
+    group_new[[i]] <- lapply(newmatrix,function(x) x[[i]])
+  }
+  group_new <- lapply(group_new, function(x) list.rbind(x))
+  
+  for(i in 1:n_group){
+    per_new[[i]] <- lapply(percent,function(x) x[[i]])
+  }
+  per_new <- lapply(per_new, function(x) list.rbind(x))
+  
+  
+  colnames <- c('A', 'B', 'C', 'D', 'E',
+                'AB', 'AB+', 'A+', 'B+', 'O', 'E', 'F',
+                'S')
+  
+  group_new <- lapply(group_new, function(x) {colnames(x)<-colnames;x})
+  group_new <- lapply(group_new, function(x) {rownames(x)<-names;x})
+  
+  per_new <- lapply(per_new, function(x) {rownames(x) <- names;x})
+  per_new <- lapply(per_new, function(x) {colnames(x) <- colnames;x})
+  
+  return(list(table_fin = group_new, perc_fin = per_new))
 }

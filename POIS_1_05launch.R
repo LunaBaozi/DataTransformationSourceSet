@@ -8,14 +8,17 @@ library(Biobase)
 library(statmod)
 library(MASS) 
 library(surveillance) 
-library(XMRF)
 library(edgeR)
 library(RUVSeq)
-source('functions.R')
+path <- getwd()
 
-source('models.R')
+source(paste0(path,'/poisson_data_gen.R'))
 
-source('main.R')
+source(paste0(path,'/functions.R'))
+
+source(paste0(path,'/models.R'))
+
+source(paste0(path,'/main.R'))
 
 `%notin%` <- Negate(`%in%`)
 
@@ -32,4 +35,4 @@ system.time(res_P1_05 <- main(n_simulation = 5000, n=n, p=p,
                         equal = FALSE, permute = TRUE, which_graph = 1,
                         model="poisson"))
 
-save(res_P1_05,file = "./Results/resultsPOIS_1_05.RData")
+save(res_P1_05,file = paste0(path,"/Results/resultsPOIS_1_05.RData"))
