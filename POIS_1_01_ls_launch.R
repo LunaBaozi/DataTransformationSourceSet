@@ -14,13 +14,13 @@ library(rlist)
 
 path <- getwd()
 
-source(paste0(path,'../DataTransformationSourceSet/poisson_data_gen.R'))
+source(paste0(path,'/../DataTransformationSourceSet/poisson_data_gen.R'))
 
-source(paste0(path,'../DataTransformationSourceSet/functions.R'))
+source(paste0(path,'/../DataTransformationSourceSet/functions.R'))
 
-source(paste0(path,'../DataTransformationSourceSet/models.R'))
+source(paste0(path,'/../DataTransformationSourceSet/models.R'))
 
-source(paste0(path,'../DataTransformationSourceSet/main.R'))
+source(paste0(path,'/../DataTransformationSourceSet/main.R'))
 `%notin%` <- Negate(`%in%`)
 
 n <- 400
@@ -36,4 +36,4 @@ system.time(res_P1_01_ls <- main(n_simulation = 5000, n=n, p=p,
                               equal = FALSE, permute = TRUE, which_graph = 1,
                               model="poisson", n_group = 10))
 
-save(res_P1_01,file= paste0(path,"/Results/resultsPOIS_1_01_list.RData"))
+save(res_P1_01,file= paste0(path,"/../DataTransformationSourceSet/Results/resultsPOIS_1_01_list.RData"))
